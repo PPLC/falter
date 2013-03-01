@@ -1,9 +1,12 @@
 
 import ddf.minim.*;
+import controlP5.*;
+
 
 Minim       minim;
 AudioPlayer jingle;
-PImage meinBild;
+PImage meinBild,vorher;
+ControlP5 cp5;
 
 
 int teiler = 2;
@@ -13,7 +16,10 @@ float fade,wert1,wert2,faktor = 1;
 int delay = 0;
 String name= "result.bmp";
 void setup() {
-  size(640, 480, P3D);
+  size(800, 400, P3D);
+    this.setupGUI();
+
+
 
   byte b[] = loadBytes("test.bmp"); 
   byte a[] = loadBytes("test.wav"); 
@@ -72,17 +78,84 @@ void setup() {
   saveBytes(name+".wav", e);
 
       meinBild = loadImage(name+".bmp");
+      vorher = loadImage("test.bmp");
+             cp5.getController("Teiler").setValue(teiler);
+                          cp5.getController("Haerte").setValue(fader);
+
 
 }
 
+void setupGUI() {
+  cp5 = new ControlP5(this);
 
+  cp5.addSlider("Teiler")
+    .setPosition(100, 350)
+      .setRange(1, 16)
+        .setSize(100, 20)
+          .setId(1)
+          .setValue(2)
+               .setNumberOfTickMarks(16)
+
+
+            ;
+
+  cp5.addSlider("Haerte")
+    .setPosition(300, 350)
+      .setRange(100, 100000000)
+        .setValue(100000)
+          .setSize(100, 20)
+          .setNumberOfTickMarks(20)
+            .setId(2)
+
+              ;
+              
+                cp5.addButton("Standard")
+    .setValue(0)
+      .setPosition(500, 350)
+        .setSize(100, 20)
+          ;
+}
 
 
 
 void draw() {
-  print("ready");
-  image(meinBild,0,0);
-
+image(meinBild,0,0,320,240);
+image(vorher,350,0,320,240);
   
 }
+
+//Gui Controller
+
+public void Standard(int theValue) {
+        teiler = 2;
+        fader = 100000;
+        cp5.getController("Haerte").setValue(fader);
+        cp5.getController("Teiler").setValue(teiler);
+
+
+}
+
+
+void controlEvent(ControlEvent theEvent) {
+  switch(theEvent.getController().getId()) {
+    
+    case(1)://Teiler
+      
+      teiler=(int)theEvent.getValue();
+    
+
+    break;
+
+    case(2)://haerte
+      fader = (Float)theEvent.getValue();
+//        cp5.getController("Teiler").setValue(borderV*100);
+
+      
+    break;
+
+
+
+  }
+}
+
 
