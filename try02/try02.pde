@@ -5,18 +5,21 @@ import controlP5.*;
 
 Minim       minim;
 AudioPlayer jingle;
-PImage meinBild,vorher;
+PImage meinBild,vorher,bg;
 ControlP5 cp5;
 
-
+int v  = 0;
+int durchgang = 10;
 int teiler = 2;
 int halb, voll=0;
-float fader = 100000;
+float fader = 10;
 float fade,wert1,wert2,faktor = 1;
 int delay = 0;
 String name= "result.bmp";
 void setup() {
-  size(800, 400, P3D);
+  size(390+320+10, 300, P3D);
+    bg = loadImage("bg.png");
+
     this.setupGUI();
 
 
@@ -79,7 +82,7 @@ public void fadeit(byte[] a,byte[] b) {
   name=str(hour())+str(minute())+str(second())+str(year())+str(month())+str(day());
   
   saveBytes(name+".bmp", d);
-  saveBytes(name+".wav", e);
+//  saveBytes(name+".wav", e);
 
       meinBild = loadImage(name+".bmp");
       vorher = loadImage("test.bmp");
@@ -129,9 +132,14 @@ void setupGUI() {
 
 
 void draw() {
+
 image(meinBild,10,0,320,240);
 image(vorher,390,0,320,240);
-  
+if (v<durchgang) {
+fader=fader*10;
+this.Again(1);
+v++;
+} 
 }
 
 //Gui Controller
