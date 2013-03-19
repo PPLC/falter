@@ -13,17 +13,18 @@ Boolean offset = false, musik = false, multiply=false, decon=false;
 int offsetZ = 100, modFilter = 1028;
 //----------------------------------------------------
 
-
 void setup() {
+
   minim = new Minim (this);
-  input = minim.getLineIn (Minim.STEREO, 128);
+  input = minim.getLineIn (Minim.STEREO, 512);
   size(660, 420, P3D);
 
   this.setupGUI();
   vorher = loadImage(quellenname);
   bild = loadImage(quellenname);
-}
 
+}
+//----------------------------------------------------
 
 
 
@@ -31,48 +32,71 @@ void setup() {
 
 void setupGUI() {
   cp5 = new ControlP5(this);
-
+//
   cp5.addSlider("SOffset")
     .setPosition(10, 320)
       .setRange(1, 255)
         .setSize(100, 20)
-          .setId(1)
-            .setValue(100)
+            .setValue(100.0)
               .setNumberOfTickMarks(255)
                 .showTickMarks(false)
+                   .setId(1)
                   ;
 
   cp5.addSlider("SmodFilter")
     .setPosition(130, 320)
       .setRange(64, 65535)
         .setSize(100, 20)
-          .setId(2)
             .setValue(1028)
               .setNumberOfTickMarks(16)
                 .showTickMarks(false)
+                  .setId(2)
                   ;
-
+   cp5.addTextlabel("label2","Bend all the Pictures v003a")
+    .setPosition(250,270)
+    ;
+ 
+ 
+  cp5.addTextlabel("label1","Press Space to Save Picture to Disk.")
+    .setPosition(250,320)
+    ;
+     cp5.addTextlabel("labe3l","All Rights Reserved PPLC http://www.papaloco.net/pplc")
+    .setPosition(250,370)
+    ;
 
   cp5.addToggle("Offset")
-    .setValue(false)
+    .setValue(0)
       .setPosition(10, 270)
         .setSize(100, 20)
           ;
   cp5.addToggle("Music")
-    .setValue(false)
+    .setValue(0)
       .setPosition(130, 270)
         .setSize(100, 20)
           ;
   cp5.addToggle("Multiply")
-    .setValue(false)
+    .setValue(0)
       .setPosition(10, 370)
         .setSize(100, 20)
           ;
   cp5.addToggle("Deconstruct")
-    .setValue(false)
+    .setValue(0)
       .setPosition(130, 370)
         .setSize(100, 20)
           ;
+   cp5.addButton("Load")
+      .setPosition(550, 270)
+        .setSize(100, 20)
+          ;
+   cp5.addButton("Reset")
+      .setPosition(550, 320)
+        .setSize(100, 20)
+          ;
+   cp5.addButton("Quit")
+      .setPosition(550, 370)
+        .setSize(100, 20)
+          ;
+          
 } 
 
 //----------------------------------------------------
@@ -93,7 +117,7 @@ public void Offset(boolean theValue) {
   if (offset) {
     cp5.getController("Music").setValue(0);
   }
-  bild = summon(bild);
+//  bild = summon(bild);
 }
 
 public void Music(boolean theValue) {
@@ -101,14 +125,30 @@ public void Music(boolean theValue) {
   if (musik) {
     cp5.getController("Offset").setValue(0);
   }
-  bild = summon(bild);
+//  bild = summon(bild);
 }
+
 public void Multiply(boolean theValue) {
   multiply = theValue;
-  bild = summon(bild);
+//  bild = summon(bild);
 }
+
 public void Deconstruct(boolean theValue) {
   decon = theValue;
+}
+
+public void Load() {
+      selectInput("Select a file to process:", "fileSelected");
+
+}
+
+public void Quit() {
+  exit();
+}
+
+public void Reset() {
+    bild = loadImage(quellenname);
+  
 }
 
 void controlEvent(ControlEvent theEvent) {
@@ -173,8 +213,24 @@ void keyPressed()
   switch(key)
   {
   case ' ':
-    bild.save(str(year())+str(month())+str(day())+"-"+str(hour())+str(minute())+str(second())+quellenname);
+    bild.save(str(year())+str(month())+str(day())+"-"+str(hour())+str(minute())+str(second())+".jpg");
     break;
+  case 'l':
+      selectInput("Select a file to process:", "fileSelected");
+
   }
 }
+
+//-----------------------
+
+void fileSelected(File selection) {
+  if (selection == null) {
+    println("Window was closed or the user hit cancel.");
+  } else {
+    quellenname = (selection.getAbsolutePath());
+    vorher = loadImage(quellenname);
+    bild = loadImage(quellenname);
+  }
+}
+
 
