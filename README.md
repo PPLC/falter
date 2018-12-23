@@ -1,4 +1,4 @@
 falter
 ======
 
-Mashing Audio &amp; Image Files
+(very naiv) Mashing Audio &amp; Image Files
